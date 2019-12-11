@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ad.title }}{% endblock %}
+
+{% block body %}
+
+    {# <div class="ad-title" style="background-image: url({{ ad.coverImage }})">
+        <div class="container">
+            <h1>{{ ad.title }}</h1>
+            <p>{{ ad.introduction }}</p>
+            <p class="h2">
+                <strong>{{ ad.rooms }} chambres</strong> pour <strong>{{ ad.price }} €</strong> par nuit
+            </p>
+        </div>
+    </div> #}
+
+
+
+
+
+
+
+    <h1 class="my-3">{{ ad.title }}</h1>
+
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <h3 class="card-header">{{ ad.title }}</h3>
+            <img style="height: 200px; width: 100%; display: block;" src="{{ ad.coverImage }}" alt="Card image">
+            <div class="card-body">
+                <h4 class="card-title">{{ ad.rooms }} chambres, <strong>{{ ad.price }} € / nuit</strong></h4>
+                <p class="card-text">{{ ad.content }}</p>
+            </div>
+            <div class="card-body">
+                <a href="#" class="card-link">En savoir plus</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
