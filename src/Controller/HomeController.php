@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\AdRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController {
 
     /** @Route("/", name="homepage") */
-    public function index() {
-        return $this->render('home/index.html.twig');
+    public function index(AdRepository $ar) {
+        return $this->render('home/index.html.twig', [
+            'ads' => $ar->findAll()
+        ]);
     }
 }
