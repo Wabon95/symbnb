@@ -26,6 +26,10 @@ class AdController extends AbstractController {
         $form = $this->createForm(AdType::class, $ad);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($ad->getImages() as $image) {
+                $image->setAd($ad);
+                $manager->persist($image);
+            }
             $manager->persist($ad);
             $manager->flush();
             $this->addFlash('success', "L'annonce <strong>{$ad->getTitle()}</strong> à bien été enregistrée !");

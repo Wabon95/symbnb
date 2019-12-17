@@ -16,19 +16,16 @@
 {% block _ad_images_widget %}
     <p>Ici, vous pouvez ajouter vos propres images !</p>
     {{ form_widget(form) }}
+    <input type="hidden" id="widgets-counter" value="0"> 
     <div class="form-group">
         <button type="button" id="add-image" class="btn btn-primary">Ajouter une image</button>
     </div>
 {% endblock %}
 
-
-
 {# Bricole pour contrer l'affichage des index des champs images #}
 {% block _ad_images_entry_row %}
     {{ form_widget(form) }}
 {% endblock %}
-
-
 
 {# Customisation des champs images #}
 {% block _ad_images_entry_widget %}
@@ -51,20 +48,18 @@
     </div>
 {% endblock %}
 
-
 {# Rajout manuel des bon index aux bons champs images #}
 {% block javascripts %}
     <script>
         // On récupère l'action du click sur l'id add-image qui correspond à notre bouton "Ajouter une image"
         $('#add-image').click(function(){
-            // On récupère le nombre de champs du formulaire images, en comptant le nombre de fois ou on trouve la class form-group,
-            // Qui correspond à un conteneur complet de champ avec Bootstrap, donc une class form-group = 1 champ de formulaire
-            const index = $('#ad_images div.form-group').length;
+            const index = +$('#widgets-counter').val();
             // En se servant du prototype de formulaire généré via symfony grâce au "'allow_add' => true" dans le CollectionType du formulaire AdType
             // On récupère le template du prototype, et on remplace, dans l'attibut id, la valeur "_name_" par l'index grâce à une regex
             const template = $('#ad_images').data('prototype').replace(/__name__/g, index);
             // On ajoute ce template dans le nouveau formulaire d'ajoute d'image à afficher
             $('#ad_images').append(template);
+            $('#widgets-counter').val(index + 1);
             handleDeleteButtons();
         })
 
