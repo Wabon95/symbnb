@@ -4,20 +4,44 @@ namespace App\DataFixtures;
 
 use App\Entity\Ad;
 use Faker\Factory;
+use App\Entity\User;
 use App\Entity\Image;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
+    private $encoder;
+
+    public function __construct(UserPasswordEncoderInterface $encoder) {
+        $this->encoder = $encoder;
+    }
+
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('fr-FR');
         $content = '';
         for ($c=0; $c < 5; $c++) { $content .= '<p>'.$faker->paragraph(mt_rand(3, 5)).'</p>';}
 
+        $genres = ['male', 'female'];
+        for ($i=1; $i <= 10; $i++) { 
+            $user[$i] = new User();
+            $user[$i]
+                ->setFirstname($faker->firstname($faker->randomElement($genres)))
+                ->setLastname($faker->lastname())
+                ->setEmail($faker->email())
+                ->setIntroduction($faker->sentence())
+                ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>')
+                ->setHash($this->encoder->encodePassword($user[$i], 'dadadada'))
+                ->setPicture('http://placehold.it/64x64')
+            ;
+            $manager->persist($user[$i]);
+        }
 
+        // Ads
         for ($i=1; $i < 30; $i++) {
+            shuffle($user);
             $ad[$i] = new Ad();
             $ad[$i]
                 ->setTitle('Annonce '.$i)
@@ -26,6 +50,7 @@ class AppFixtures extends Fixture
                 ->setIntroduction($faker->paragraph(2))
                 ->setPrice(mt_rand(40, 100))
                 ->setRooms(mt_rand(1, 4))
+                ->setAuthor($user[1])
             ;
 
             for ($j=1; $j < mt_rand(2, 5); $j++) { 
