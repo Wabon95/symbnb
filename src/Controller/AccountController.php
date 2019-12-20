@@ -70,11 +70,17 @@ class AccountController extends AbstractController {
         $form = $this->createForm(PasswordUpdateType::class, $passwordUpdate);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setHash($encoder->encodePassword($user, $passwordUpdate->getNewPassword()));
-            $manager->persist($user);
-            $manager->flush();
-            $this->addFlash('success', 'Votre mot de passe à bien été modifié.');
-            return $this->redirectToRoute('account_logout');
+            // On vérifie que le nouveau mot de passe renseigné est bien différent du précédent
+            if (password_verify($passwordUpdate->getNewPassword(), $user->getHash())) {
+                $this->addFlash('warning', 'Votre nouveau mot de passe est identique au précédent.');
+                return $this->redirectToRoute('account_password');
+            } else {
+                $user->setHash($encoder->encodePassword($user, $passwordUpdate->getNewPassword()));
+                $manager->persist($user);
+                $manager->flush();
+                $this->addFlash('success', 'Votre mot de passe à bien été modifié.');
+                return $this->redirectToRoute('account_logout');
+            }
         }
         return $this->render('account/password.html.twig', [
             'form' => $form->createView()

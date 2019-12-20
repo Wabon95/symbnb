@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 class PasswordUpdate
 {
     /**
-     * @SecurityAssert\UserPassword(message = "Votre mot de passe actuel est éroné.")
+     * @SecurityAssert\UserPassword(message="Votre mot de passe actuel est éroné.")
      */
     private $oldPassword;
 
