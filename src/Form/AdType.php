@@ -61,7 +61,7 @@ class AdType extends ApplicationType
             )
             ->add(
                 'save', SubmitType::class, [
-                    'label' => 'Créer l\'annonce',
+                    'label' => 'Enregistrer',
                     'attr' => [
                         "class" => 'btn btn-primary'
                     ]

@@ -9,6 +9,7 @@ use App\Repository\AdRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdController extends AbstractController {
@@ -20,7 +21,10 @@ class AdController extends AbstractController {
         ]);
     }
 
-    /** @Route("/ads/new", name="ads_create") */
+    /**
+     * @Route("/ads/new", name="ads_create")
+     * @Security("is_granted('ROLE_USER')")
+    */
     public function create(Request $request, EntityManagerInterface $manager) {
         $ad = new Ad();
         $form = $this->createForm(AdType::class, $ad);
@@ -43,10 +47,47 @@ class AdController extends AbstractController {
         ]);
     }
 
+    /**
+     * @Route("/ads/{slug}/edit", name="ads_edit")
+     * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()", message="Seul l'auteur d'une annonce est autorisé à modifier celle-ci.")
+    */
+    public function edit(Ad $ad, Request $request, EntityManagerInterface $manager) {
+        $form = $this->createForm(AdType::class, $ad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($ad->getImages() as $image) {
+                $image->setAd($ad);
+                $manager->persist($image);
+            }
+            $ad->setAuthor($this->getUser());
+            $manager->persist($ad);
+            $manager->flush();
+            $this->addFlash('success', "L'annonce <strong>{$ad->getTitle()}</strong> à bien été modifiée !");
+            return $this->redirectToRoute('ads_show', [
+                'slug' => $ad->getSlug()
+            ]);
+        }
+        return $this->render('ad/edit.html.twig', [
+            'ad' => $ad,
+            'form' => $form->createView()
+        ]);
+    }
+
     /** @Route("/ads/{slug}", name="ads_show") */
     public function show(Ad $ad) {
         return $this->render('ad/show.html.twig', [
             'ad' => $ad
         ]);
+    }
+
+    /**
+     * @Route("/ads/{slug}/delete", name="ads_delete")
+     * @Security("is_granted('ROLE_USER') and user == ad.getAuthor()", message="Seul l'auteur d'une annonce est autorisé à supprimer celle-ci.")
+    */
+    public function delete(Ad $ad, EntityManagerInterface $manager) {
+        $manager->remove($ad);
+        $manager->flush();
+        $this->addFlash('success', "L'annonce <strong>{$ad->getTitle()}</strong> à bien été supprimée !");
+        return $this->redirectToRoute('ads_index');
     }
 }

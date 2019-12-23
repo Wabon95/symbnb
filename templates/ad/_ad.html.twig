@@ -12,6 +12,9 @@
         </div>
         <div class="card-body">
             <a href="{{ url }}" class="card-link">En savoir plus</a>
+            {% if app.user is same as(ad.author) %}
+                <a href="{{ path('ads_edit', {'slug': ad.slug}) }}" class="card-link ml-3">Modifier l'annonce</a>
+            {% endif %}
         </div>
     </div>
 </div>
