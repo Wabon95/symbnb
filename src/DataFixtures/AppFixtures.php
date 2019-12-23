@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
                 ->setIntroduction($faker->sentence())
                 ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>')
                 ->setHash($this->encoder->encodePassword($user[$i], 'dadadada'))
-                ->setPicture('http://placehold.it/64x64')
+                ->setPicture('http://placehold.it/128x128')
             ;
             $manager->persist($user[$i]);
         }

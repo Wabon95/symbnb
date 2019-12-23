@@ -40,7 +40,6 @@ class AccountController extends AbstractController {
             $manager->persist($user);
             $manager->flush();
             $this->addFlash('success', 'Votre compte à bien été crée ! Vous pouvez dès à présent vous connecter.');
-
             return $this->redirectToRoute('account_login');
         }
         return $this->render('account/registration.html.twig', [
@@ -84,6 +83,13 @@ class AccountController extends AbstractController {
         }
         return $this->render('account/password.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /** @Route("/account", name="account_index") */
+    public function myAccount() {
+        return $this->render('user/index.html.twig', [
+            'user' => $this->getUser(),
         ]);
     }
 }
