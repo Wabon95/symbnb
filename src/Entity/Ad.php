@@ -95,6 +95,23 @@ class Ad
         }
     }
 
+    public function getNotAvailableDays(): array {
+        $notAvailableDays = [];
+        foreach($this->bookings as $booking) {
+            // range(min, max, interval) Permet de retourner un tableau selon un interval régulier. Exemple range(10, 20, 2) va renvoyer [10, 12, 14, 16, 18, 20]
+            // Ici on veut calculer l'intervale entre la date d'arivée et de départ, au format Timestamp, donc en interval,
+            // on défini l'interval que l'on souhaite (une journée) au format TimeStamp, soit 24h x 60min x 60s
+            $result = range($booking->getStartDate()->getTimestamp(), $booking->getEndDate()->getTimestamp(), 24*60*60);
+            // Grâce à array_map, on applique une fonction (anonyme ici) sur tous les élements de notre tableau $result
+            $days = array_map(function($dayTimestamp) {
+                // Pour chaque éléments de $result, on veut retourner un objet DateTime, on lui formattant une date au format 'Y-m-D' grâce à la fonction date(format, date)
+                return new \DateTime(date('Y-m-d', $dayTimestamp));
+            }, $result);
+            $notAvailableDays = array_merge($notAvailableDays, $days);
+        }
+        return $notAvailableDays;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
