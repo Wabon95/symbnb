@@ -72,14 +72,19 @@ class Booking
         $notAvailableDays = $this->ad->getNotAvailableDays();
         $bookingDays      = $this->getDays();
 
+        // Formatage de la date sur les 2 tableaux de dates
         $formatDay = function($day) {
             return $day->format('Y-m-d');
         };
 
+        // Formatage de la date pour les journées bookées par la réservation de l'utilisateur
         $days         = array_map($formatDay, $bookingDays);
+        // Formatage de la date des journées déjà bookées pour d'autres réservations
         $notAvailable = array_map($formatDay, $notAvailableDays);
 
+        // On boucle sur les journées bookées par l'utilisateur...
         foreach($days as $day) {
+            // ... Pour vérifier individuellement, si chaque journée bookées est trouvées dans les journées déjà réservés pour cette annonce pour d'autres réservation
             if (array_search($day, $notAvailable) !== false) {
                 return false;
             }
@@ -87,9 +92,10 @@ class Booking
         }
     }
 
+    // Retourne les journées souhaitant être bookées par l'utilisateur à sa réservation en un tableau retournant des objets DateTime
     public function getDays(): array {
         $resultat = range($this->startDate->getTimestamp(), $this->endDate->getTimestamp(), 24*60*60);
-        $days = array_map(function($dayTimestamp) {
+        $days     = array_map(function($dayTimestamp) {
             return new \DateTime(date('Y-m-d', $dayTimestamp));
         }, $resultat);
         return $days;

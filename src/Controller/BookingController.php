@@ -26,7 +26,7 @@ class BookingController extends AbstractController {
                 ->setBooker($this->getUser())
                 ->setAd($ad)
             ;
-            // Si les dates ne sont pas disponibles
+            // Vérification de la disponibilité des dates de la réservation
             if (!$booking->isBookableDates()) {
                 $this->addFlash('warning', "Les dates que vous avez choisi ne peuvent être reservée : elles sont déjà prises.");
             } else {
