@@ -14,6 +14,15 @@
             <div class="row mt-5">
                 <div class="col-4">
                     <img src="{{ ad.coverImage }}" alt="Photo de l'annonce {{ ad.title }}" class="img-fluid">
+                    <div class="mt-3">
+                        {% set comment = ad.commentFromAuthor(app.user) %}
+                        {% if comment is not null %}
+                            <strong>Note donnée : {% include 'partials/rating.html.twig' with {'rating': comment.rating} %}</strong>
+                        {% else %}
+                            Vous n'avez pas encore données de note.
+                            <a href="{{ path('booking_show', {'id': booking.id}) }}#comment" class="btn btn-link">Je donne mon avis</a>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="col-8">
                     <h4>{{ ad.title }}</h4>
@@ -21,7 +30,7 @@
                         Réservation n° <span class="font-weight-bold">{{ booking.id }}</span>
                         Du {{ booking.startDate|date('d/m/Y') }} au {{ booking.endDate|date('d/m/Y') }} ({{ booking.amount }} €)
                     </p>
-                    <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-info">Plus d'informations</a>
+                    <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-link">Plus d'informations</a>
                 </div>
             </div>
         {% endfor %}

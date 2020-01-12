@@ -2,7 +2,20 @@
 <div class="col-md-4">
     <div class="card mb-3">
         <a href="{{ url }}">
-            <h3 class="card-header">{{ ad.title }}</h3>
+            <h3 class="card-header">
+                <div class="row">
+                    <div class="col">
+                        {{ ad.title }}
+                    </div>
+                    <div class="col">
+                        {% if ad.comments|length > 0 %}
+                            {% include 'partials/rating.html.twig' with {'rating': ad.avgRatings} %}
+                        {% else %}
+                            <small>Pas encore notée</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </h3>
             <img style="height: 200px; width: 100%; display: block;" src="{{ ad.coverImage }}" alt="Card image">
         </a>
         <div class="card-body">

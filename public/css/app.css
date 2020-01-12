@@ -43,4 +43,17 @@ div.carousel-caption {
 
 .datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
      color: firebrick !important;
- }
+}
+
+.star {
+    display: inline-block; margin-right: -4px;
+    position: relative;
+    top: 3px;
+    height: 24px;
+    width: 24px;
+    background-image: url("../images/star.png");
+}
+
+small {
+    font-size: 0.6em;
+}
