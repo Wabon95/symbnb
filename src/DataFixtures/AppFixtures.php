@@ -36,7 +36,7 @@ class AppFixtures extends Fixture
             ->setIntroduction($faker->sentence())
             ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>')
             ->setHash($this->encoder->encodePassword($adminUser, 'dadadada'))
-            ->setPicture('http://placehold.it/128x128')
+            ->setPicture('http://placehold.it/32x32')
             ->addUserRole($adminRole)
         ;
         $manager->persist($adminUser);
@@ -54,7 +54,7 @@ class AppFixtures extends Fixture
                 ->setIntroduction($faker->sentence())
                 ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>')
                 ->setHash($this->encoder->encodePassword($user[$i], 'dadadada'))
-                ->setPicture('http://placehold.it/128x128')
+                ->setPicture('http://placehold.it/32x32')
             ;
             $manager->persist($user[$i]);
         }
@@ -65,7 +65,7 @@ class AppFixtures extends Fixture
             $ad[$i] = new Ad();
             $ad[$i]
                 ->setTitle('Annonce '.$i)
-                ->setCoverImage($faker->imageUrl(1000,350))
+                ->setCoverImage('https://loremflickr.com/3000/1000')
                 ->setContent($content)
                 ->setIntroduction($faker->paragraph(2))
                 ->setPrice(mt_rand(40, 100))
